@@ -1,0 +1,21 @@
+import requests
+from bs4 import BeautifulSoup
+import urllib2
+import pymongo
+
+from pymongo import MongoClient
+
+client = MongoClient('localhost')
+db = client.crawl_db
+
+url = 'http://apps.who.int/gb/gov/executive-board-members.html'
+resp = requests.get(url)
+soup = BeautifulSoup(resp.content)
+data= soup.find_all('div')
+data_list=data[0].find_all('p')
+for item in data_list:
+    print item.text
+    db.collection1.insert_one({"profile":item.get_text()})
+    
+
+
